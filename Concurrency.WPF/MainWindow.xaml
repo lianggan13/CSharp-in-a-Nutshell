@@ -1,0 +1,34 @@
+﻿<Window
+    x:Class="Concurrency.WPF.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Concurrency.WPF"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="MainWindow"
+    Width="800"
+    Height="450"
+    mc:Ignorable="d">
+    <Grid>
+        <StackPanel HorizontalAlignment="Left">
+
+            <Button Click="ObserveOn_Click" Content="ObserveOn UI"></Button>
+            <Button Click="BufferWithCount_Click" Content="Buffer with Count"></Button>
+            <Button Click="WindowWithCount_Click" Content="Buffer with Count"></Button>
+            <Button Click="BufferWithTime_Click" Content="Buffer with Time"></Button>
+
+
+            <Button Click="Throttle_Click" Content="Throttle"></Button>
+
+
+            <Button Click="Throttle_Click" Content="Throttle"></Button>
+            
+            <Button Click="Sample_Click" Content="Sample"></Button>
+            
+            <Button  Click="TaskWithTimeout_Click" Content="Task to Observable with Timeout" />
+
+            <Button Click="TimeoutWithSelector_Click" Content="Timeout with Selector" />
+
+        </StackPanel>
+    </Grid>
+</Window>
