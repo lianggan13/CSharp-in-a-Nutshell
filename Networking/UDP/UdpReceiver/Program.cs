@@ -56,7 +56,7 @@ static string GetValueForKey(string[] args, string key)
 
 static async Task ReaderAsync(int port, string groupAddress)
 {
-    using (var client = new UdpClient())
+    using (var client = new UdpClient(port))
     //using (var client = new UdpClient(new IPEndPoint(IPAddress.Any, port)))
     {
         //IPEndPoint endPoint = new IPEndPoint(IPAddress.Any, 0);

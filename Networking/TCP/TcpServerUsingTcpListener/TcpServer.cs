@@ -90,9 +90,21 @@ public class TcpServer
                 {
                     byte[] readBuffer = new byte[10240];
 
-                    int read = await stream.ReadAsync(readBuffer, 0, readBuffer.Length);
+                    //int read = await stream.ReadAsync(readBuffer, 0, readBuffer.Length);
 
-                    if (read == 0)
+                    int bytesRead = 0; int chunkSize = 1;
+                    while (bytesRead < readBuffer.Length && chunkSize > 0)
+                        bytesRead +=
+                            chunkSize = await stream.ReadAsync(readBuffer, bytesRead, readBuffer.Length - bytesRead);
+
+                    //List<byte> totalRead = new List<byte>();
+                    //while((bytesRead= await stream.ReadAsync(readBuffer,0, readBuffer.Length)) > 0)
+                    //{
+                    //    totalRead.AddRange(readBuffer.Take(bytesRead));
+                    //}
+
+
+                    if (bytesRead == 0)
                     {
                         // remove
                         clients.TryRemove(key, out TcpClient delclient);
@@ -101,7 +113,7 @@ public class TcpServer
                     }
 
                     ReceivedData?.Invoke(this, new SocketReceivedDataEventArgs(remoteIp, remotePort,
-                                                       readBuffer.Take(read).ToArray()));
+                                                       readBuffer.Take(bytesRead).ToArray()));
                 } while (true);
             }
         }
