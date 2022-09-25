@@ -18,14 +18,16 @@ namespace Concurrency
     {
         static void Main(string[] args)
         {
-            ReactiveExtensions.SubEventStream();
+            //Rx.SubEventStream();
+            // TPL.SimpleLink();
+            TPL_DataFlow.CreateCustomBlock();
 
             //// ch05
             //{
             //    Ch06();
             //}
 
-            ch12r02A.Show();
+            //ch12r02A.Show();
 
             Console.WriteLine("Press any key to quit.");
             Console.ReadKey();
@@ -122,70 +124,6 @@ namespace Concurrency
             .Subscribe(x => Console.WriteLine("Observing '" + x + "' on " + Thread.CurrentThread.Name));
         }
 
-        public static void Ch05()
-        {
-            {
-                // TransformBlock
-                var multiplyBlock = new TransformBlock<int, int>(item =>
-                {
-                    int result = item * 2;
-                    Console.WriteLine($"item * 2:{result}");
-
-                    return result;
-                });
-                var subtractBlock = new TransformBlock<int, int>(item =>
-                {
-                    int result = item - 2;
-                    Console.WriteLine($"item - 2:{item - 2}");
-
-                    return result;
-                });
-
-
-                // After linking, values that exit multiplyBlock will enter subtractBlock.
-                //multiplyBlock.LinkTo(subtractBlock);
-
-
-                var options = new DataflowLinkOptions { PropagateCompletion = true };
-                IDisposable link = multiplyBlock.LinkTo(subtractBlock, options);
-
-                multiplyBlock.Post(2);
-
-                // The first block's completion is automatically propagated to the second block.
-                multiplyBlock.Complete();
-
-
-                link.Dispose();
-
-
-                IPropagatorBlock<int, int> CreateMyCustomBlock()
-                {
-                    var multiplyBlock2 = new TransformBlock<int, int>(item => item * 2);
-                    var addBlock = new TransformBlock<int, int>(item => item + 2);
-                    var divideBlock = new TransformBlock<int, int>(item => item / 2);
-
-                    var flowCompletion = new DataflowLinkOptions { PropagateCompletion = true };
-                    multiplyBlock2.LinkTo(addBlock, flowCompletion);
-                    addBlock.LinkTo(divideBlock, flowCompletion);
-
-                    return DataflowBlock.Encapsulate(multiplyBlock2, divideBlock);
-                }
-            }
-
-            {
-                // BufferBlock
-                var sourceBlock = new BufferBlock<int>();
-                var options = new DataflowBlockOptions { BoundedCapacity = 1 };
-                var targetBlockA = new BufferBlock<int>(options);
-                var targetBlockB = new BufferBlock<int>(options);
-
-                sourceBlock.LinkTo(targetBlockA);
-                sourceBlock.LinkTo(targetBlockB);
-
-                sourceBlock.Post(2);
-            }
-
-        }
 
         /// <summary>
         /// Cancel

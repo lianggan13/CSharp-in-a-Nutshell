@@ -92,7 +92,9 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReactiveExtensions.cs" />
+    <Compile Include="Rx.cs" />
+    <Compile Include="TPL_DataFlow.cs" />
+    <Compile Include="TPL_Parallel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
