@@ -149,7 +149,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocketClient", "Networking\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocketServer", "Networking\Sockets\SocketServer\SocketServer.csproj", "{C0A10A47-1F3A-4003-BCCF-42E62B019891}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Concurrency", "Concurrency\Concurrency.csproj", "{02590A85-7D87-4E3B-BFC7-61EAAFDC5214}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Concurrency", "Concurrency\Concurrency.csproj", "{02590A85-7D87-4E3B-BFC7-61EAAFDC5214}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -6,8 +6,8 @@ using System.Text;
 
 
 //args = new string[] { "-p", "9400", "-h", "localhost"};
-//args = new string[] { "-p", "9400", "-b" };             // 广播
-args = new string[] { "-p", "9400", "-g", "230.0.0.1" }; // 组播
+args = new string[] { "-p", "9400", "-b" };                 // 广播
+//args = new string[] { "-p", "9400", "-g", "230.0.0.1" };  // 组播
 if (!ParseCommandLine(args, out int port, out string hostname, out bool broadcast, out string groupAddress, out bool ipv6))
 {
     ShowUsage();
@@ -92,7 +92,10 @@ static async Task<IPEndPoint> GetIPEndPointAsync(int port, string hostName, bool
     {
         if (broadcast)
         {
-            endpoint = new IPEndPoint(IPAddress.Broadcast, port);
+            // IP + (子网掩码 --> 掩码位) --> 广播地址
+            //endpoint = new IPEndPoint(IPAddress.Broadcast, port);              // 子网掩码需设置为: 255.255.255.0 (网络广播不会被路由)
+            //endpoint = new IPEndPoint(IPAddress.Parse("192.168.1.255"), port); // 子网掩码需设置为: 255.255.255.0 (网络广播会被路由，并会发送到专门网络上的每台主机)
+            endpoint = new IPEndPoint(IPAddress.Parse("192.168.63.255"), port);  // 子网掩码需设置为: 255.255.192.0
         }
         else if (hostName != null)
         {
@@ -154,6 +157,7 @@ static async Task SenderAsync(IPEndPoint remoteIpEndPoint, bool broadcast, strin
 
                 byte[] datagram = Encoding.UTF8.GetBytes($"{input} from {localhost}");
                 int sent = await client.SendAsync(datagram, datagram.Length, remoteIpEndPoint);
+                //int sent = await client.SendAsync(datagram, datagram.Length);
             } while (!completed);
 
             if (groupAddress != null)
