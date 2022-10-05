@@ -5,30 +5,46 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Concurrency.WPF"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:Concurrency.WPF"
     Title="MainWindow"
     Width="800"
     Height="450"
     mc:Ignorable="d">
+    <Window.DataContext>
+        <vm:MainViewModel x:Name="vm" />
+    </Window.DataContext>
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </Window.Resources>
     <Grid>
         <StackPanel HorizontalAlignment="Left">
 
-            <Button Click="ObserveOn_Click" Content="ObserveOn UI"></Button>
-            <Button Click="BufferWithCount_Click" Content="Buffer with Count"></Button>
-            <Button Click="WindowWithCount_Click" Content="Buffer with Count"></Button>
-            <Button Click="BufferWithTime_Click" Content="Buffer with Time"></Button>
+            <Button Click="ObserveOn_Click" Content="ObserveOn UI" />
+            <Button Click="BufferWithCount_Click" Content="Buffer with Count" />
+            <Button Click="WindowWithCount_Click" Content="Buffer with Count" />
+            <Button Click="BufferWithTime_Click" Content="Buffer with Time" />
 
 
-            <Button Click="Throttle_Click" Content="Throttle"></Button>
+            <Button Click="Throttle_Click" Content="Throttle" />
 
 
-            <Button Click="Throttle_Click" Content="Throttle"></Button>
-            
-            <Button Click="Sample_Click" Content="Sample"></Button>
-            
-            <Button  Click="TaskWithTimeout_Click" Content="Task to Observable with Timeout" />
+            <Button Click="Throttle_Click" Content="Throttle" />
+
+            <Button Click="Sample_Click" Content="Sample" />
+
+            <Button Click="TaskWithTimeout_Click" Content="Task to Observable with Timeout" />
 
             <Button Click="TimeoutWithSelector_Click" Content="Timeout with Selector" />
 
+            <Grid>
+                <Label Content="Loading..." Visibility="{Binding MyValue.IsNotCompleted, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                <Label Content="{Binding MyValue.Result}" Visibility="{Binding MyValue.IsSuccessfullyCompleted, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                <Label
+                    Content="{Binding MyValue.Error}"
+                    Foreground="Red"
+                    Visibility="{Binding MyValue.IsFaulted, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+            </Grid>
         </StackPanel>
     </Grid>
 </Window>
