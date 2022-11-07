@@ -5,6 +5,21 @@ using Concurrency;
 
 //TPL_DataFlow.CreateCustomBlock();
 
+int x = 6;
+
+int y = x + 5;
+
+
+Task.Run(async () =>
+{
+	while (true)
+	{
+
+		await Task.Delay(4000);
+	}
+
+});
+
 await Asynchronous.ProcessTasksAsync();
 
 //// ch05
