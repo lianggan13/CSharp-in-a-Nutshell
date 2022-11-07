@@ -5,11 +5,17 @@ using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Timers;
 using System.Windows;
+using Utilities;
 
 namespace Concurrency
 {
     public class Rx
     {
+        public static void Show()
+        {
+            SubscribeWithDefer();
+        }
+
         public static void SubEventStream()
         {
             {
@@ -139,7 +145,6 @@ namespace Concurrency
             }
         }
 
-
         public static void ThrottleAndSample()
         {
             {
@@ -222,5 +227,28 @@ namespace Concurrency
             }
         }
 
+        public static void SubscribeWithDefer()
+        {
+            //var invokeServerObservable = GetValueAsync().ToObservable();
+
+            var invokeServerObservable = Observable.Defer(
+                () => GetValueAsync().ToObservable());
+            invokeServerObservable.Subscribe(result =>
+            {
+                LogHelper.Info($"{result}");
+            });
+            invokeServerObservable.Subscribe(result =>
+            {
+                LogHelper.Info($"{result}");
+            });
+        }
+
+        static async Task<int> GetValueAsync()
+        {
+            Console.WriteLine("Calling server...");
+            await Task.Delay(TimeSpan.FromSeconds(2));
+            Console.WriteLine("Returning result...");
+            return 13;
+        }
     }
 }

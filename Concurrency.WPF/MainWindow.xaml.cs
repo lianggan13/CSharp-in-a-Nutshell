@@ -17,8 +17,10 @@ namespace Concurrency.WPF
     /// </summary>
     public partial class MainWindow : Window
     {
+
         public MainWindow()
         {
+
             InitializeComponent();
         }
 
@@ -254,4 +256,6 @@ namespace Concurrency.WPF
             }
         }
     }
+
+
 }
