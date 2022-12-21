@@ -1,4 +1,6 @@
-﻿using System.Net.Http.Headers;
+﻿using Newtonsoft.Json;
+using System.Net.Http.Headers;
+using System.Text;
 
 public class HttpClientSamples : IDisposable
 {
@@ -114,12 +116,49 @@ public class HttpClientSamples : IDisposable
             Console.WriteLine($"Received payload of {responseBodyAsText.Length} characters");
             Console.WriteLine();
             Console.WriteLine(responseBodyAsText);
-
         }
         catch (Exception ex)
         {
             Console.WriteLine($"{ex.Message}");
         }
+    }
+
+    public async Task<T> GetAsync<T>(string requestUri)
+    {
+        HttpResponseMessage resp = await _httpClient.GetAsync(requestUri);
+        Console.WriteLine($"status from GET {resp.StatusCode}");
+        resp.EnsureSuccessStatusCode();
+        string json = await resp.Content.ReadAsStringAsync();
+        return JsonConvert.DeserializeObject<T>(json);
+    }
+
+    public async Task<T> PostAsync<T>(string uri, T item)
+    {
+        string json = JsonConvert.SerializeObject(item);
+        HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
+        HttpResponseMessage resp = await _httpClient.PostAsync(uri, content);
+        Console.WriteLine($"status from POST {resp.StatusCode}");
+        resp.EnsureSuccessStatusCode();
+        Console.WriteLine($"added resource at {resp.Headers.Location}");
+        json = await resp.Content.ReadAsStringAsync();
+        return JsonConvert.DeserializeObject<T>(json);
+    }
+
+    public async Task PutAsync<T>(string uri, T item)
+    {
+        string json = JsonConvert.SerializeObject(item);
+        HttpContent content = new StringContent(json, Encoding.UTF8,
+          "application/json");
+        HttpResponseMessage resp = await _httpClient.PutAsync(uri, content);
+        Console.WriteLine($"status from PUT {resp.StatusCode}");
+        resp.EnsureSuccessStatusCode();
+    }
+
+    public async Task DeleteAsync(string uri)
+    {
+        HttpResponseMessage resp = await _httpClient.DeleteAsync(uri);
+        Console.WriteLine($"status from DELETE {resp.StatusCode}");
+        resp.EnsureSuccessStatusCode();
     }
 
     public void Dispose()

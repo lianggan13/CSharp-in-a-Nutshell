@@ -2,8 +2,9 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using Utilities;
 
-Console.WriteLine("Hello, World!");
+await SendAndReceiveAsync("192.168.0.9", 1918);
 
 if (args.Length != 2)
 {
@@ -62,11 +63,14 @@ static async Task SenderAsync(NetworkStream stream, CancellationTokenSource cts)
     Console.WriteLine("Sender task");
     while (true)
     {
-        Console.WriteLine("enter a string to send, shutdown to exit");
-        string line = Console.ReadLine();
+        //Console.WriteLine("enter a string to send, shutdown to exit");
+        //string line = Console.ReadLine();
+        string line = $"{DateTime.Now:yyyy MM dd HH:mm:ss}"; //"zhangliang";
+        LogHelper.Info(line);
         byte[] buffer = Encoding.UTF8.GetBytes($"{line}\r\n");
         await stream.WriteAsync(buffer, 0, buffer.Length);
         await stream.FlushAsync();
+        await Task.Delay(2000);
         if (string.Compare(line, "shutdown", ignoreCase: true) == 0)
         {
             cts.Cancel();

@@ -4,8 +4,8 @@ using System.Text;
 using Utilities;
 
 
-const string Host = "localhost";
-const int Port = 9910;
+const string Host = "192.168.0.9";
+const int Port = 32769;
 
 await SendAndReceiveAsync();
 Console.ReadLine();
@@ -24,7 +24,8 @@ static async Task SendAndReceiveAsync()
             do
             {
                 LogHelper.Info("enter a string, bye to exit");
-                line = Console.ReadLine();
+                //line = Console.ReadLine();
+                line = "zhangliang";
                 LogHelper.Info($"<< {line}");
 
                 await writer.WriteLineAsync(line);

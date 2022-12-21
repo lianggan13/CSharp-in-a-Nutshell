@@ -19,7 +19,7 @@ Task.Run(async () =>
 
 });
 
-await Asynchronous.ProcessTasksAsync();
+// await Asynchronous.ProcessTasksAsync();
 
 //// ch05
 //{
@@ -29,10 +29,9 @@ await Asynchronous.ProcessTasksAsync();
 //ch12r02A.Show();
 
 
-using Concurrency;
 
 //TAP.Show().Wait();
-Rx.Show();
+//Rx.Show();
 
 //Scheduler.Show();
 

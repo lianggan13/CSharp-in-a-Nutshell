@@ -3,7 +3,9 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-Console.WriteLine("Hello, World!");
+Listener(1918);
+Console.ReadLine();
+
 
 if (args.Length != 1)
 {
