@@ -1,6 +1,7 @@
 ﻿using log4net;
 using log4net.Config;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace Utilities
 {
@@ -26,9 +27,27 @@ namespace Utilities
 
         public static void Warn(string text, Exception ex) => FileLog.Warn(text, ex);
 
-        public static void Error(string text) => FileLog.Error(text);
+        public static void Error(string text,
+            [CallerFilePath] string? path = null,
+            [CallerLineNumber] int line = -1,
+            [CallerMemberName] string? name = null)
+        {
+            FileLog.Error($"File:{path}");
+            FileLog.Error($"Line:{line}");
+            FileLog.Error($"Caller:{name}");
+            FileLog.Error(text);
+        }
 
-        public static void Error(string text, Exception ex) => FileLog.Error(text, ex);
+        public static void Error(string text, Exception ex,
+            [CallerFilePath] string? path = null,
+            [CallerLineNumber] int line = -1,
+            [CallerMemberName] string? name = null)
+        {
+            FileLog.Error($"File:{path}");
+            FileLog.Error($"Line:{line}");
+            FileLog.Error($"Caller:{name}");
+            FileLog.Error(text, ex);
+        }
 
         public static void Fatal(string text) => FileLog.Fatal(text);
 
