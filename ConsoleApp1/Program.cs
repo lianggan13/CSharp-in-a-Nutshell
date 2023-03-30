@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -69,8 +68,10 @@ namespace ConsoleApp1
             //}
 
             // 信号 俱乐部
-            //TheClub club = new TheClub();
-            //for (int i = 0; i < 5; i++) new Thread(club.Enter).Start(i);
+            TheClub club = new TheClub();
+            for (int i = 0; i < 5; i++) new Thread(club.Enter).Start(i);
+
+
             // 读写锁
             //ReadWriteLockDemo rwLockDemo = new ReadWriteLockDemo();
             //new Thread(rwLockDemo.Read).Start();
@@ -83,12 +84,12 @@ namespace ConsoleApp1
             //WaitHandleDelegate waitHandle = new WaitHandleDelegate();
             //WaitHandleDelegate.Show();
 
-            BaeeierDemo.Show();// baeeier = new BaeeierDemo();
-          
+            //BaeeierDemo.Show();// baeeier = new BaeeierDemo();
+
             Console.ReadKey();
         }
 
-        
+
 
 
     }
@@ -126,23 +127,6 @@ namespace ConsoleApp1
     }
 
     /// <summary>
-    /// 俱乐部
-    /// </summary>
-    public class TheClub
-    {
-        static SemaphoreSlim _sem = new SemaphoreSlim(3, 5);
-        public void Enter(object id)
-        {
-            Console.WriteLine(id + " wants to enter");
-            _sem.Wait();
-            Console.WriteLine(id + " is in!");
-            Thread.Sleep(1000 * (int)id);
-            Console.WriteLine(id + " is leaving!");
-            _sem.Release();
-        }
-    }
-
-    /// <summary>
     /// 读写并发
     /// </summary>
     public class ReadWriteLockDemo
@@ -155,21 +139,21 @@ namespace ConsoleApp1
             while (true)
             {
                 // 支持并发【读】操作
-                _rw.EnterReadLock();               
+                _rw.EnterReadLock();
                 StringBuilder sb = new StringBuilder();
                 foreach (var item in _items)
                 {
                     sb.Append(item + ",");
                     Thread.Sleep(100);
                 }
-                Console.WriteLine(string.Format("Thread[{0}] Read data:{1}", Thread.CurrentThread.ManagedThreadId,sb.ToString()));
+                Console.WriteLine(string.Format("Thread[{0}] Read data:{1}", Thread.CurrentThread.ManagedThreadId, sb.ToString()));
                 _rw.ExitReadLock();
             }
-        } 
+        }
         public void Write()
         {
             while (true)
-            {               
+            {
                 Console.WriteLine(string.Format("当前共 {0} readers", _rw.CurrentReadCount));
                 int newNum = GetRandNum(100);
                 _rw.EnterUpgradeableReadLock();   // 调用 【可升级锁🔒】
@@ -180,10 +164,10 @@ namespace ConsoleApp1
                     _rw.ExitWriteLock();
                     Console.WriteLine(string.Format("Thread[{0}] Add item:{1}", Thread.CurrentThread.ManagedThreadId, newNum));
                 }
-                 _rw.ExitUpgradeableReadLock();
+                _rw.ExitUpgradeableReadLock();
                 Thread.Sleep(100);
             }
-           
+
         }
         private int GetRandNum(int maxNum) { lock (_random) return _random.Next(maxNum); }
     }
@@ -198,7 +182,7 @@ namespace ConsoleApp1
         static readonly object _locker = new object();
         static string _cmd;
 
-        public  void Leader()
+        public void Leader()
         {
             new Thread(Worker).Start();
             _ready.WaitOne();
@@ -214,7 +198,7 @@ namespace ConsoleApp1
             _go.Set();
 
         }
-        
+
         public void Worker()
         {
             while (true)
@@ -224,7 +208,7 @@ namespace ConsoleApp1
                 lock (_cmd)
                 {
                     if (string.IsNullOrEmpty(_cmd)) return;
-                    Console.WriteLine(_cmd+" [Done]");
+                    Console.WriteLine(_cmd + " [Done]");
                 }
             }
         }
@@ -263,22 +247,22 @@ namespace ConsoleApp1
         /// <returns></returns>
         public static Task<bool> ToTask(this WaitHandle waitHandle, int timeout = -1)
         {
-            var tsc = new TaskCompletionSource<bool>();       
+            var tsc = new TaskCompletionSource<bool>();
             var tokenReady = new ManualResetEventSlim();
-            RegisteredWaitHandle token = null; 
-              token  = ThreadPool.RegisterWaitForSingleObject(waitHandle,(state,timeOut)
-                =>
-            {
-                tokenReady.Wait();tokenReady.Dispose();
-                token.Unregister(waitHandle);
-                tsc.SetResult(!timeOut);
-            },null,timeout,true);
+            RegisteredWaitHandle token = null;
+            token = ThreadPool.RegisterWaitForSingleObject(waitHandle, (state, timeOut)
+              =>
+          {
+              tokenReady.Wait(); tokenReady.Dispose();
+              token.Unregister(waitHandle);
+              tsc.SetResult(!timeOut);
+          }, null, timeout, true);
             tokenReady.Set();
             return tsc.Task;
         }
-        
-        
-    
+
+
+
     }
 
     /// <summary>
@@ -294,7 +278,7 @@ namespace ConsoleApp1
             new Thread(Speak).Start();
 
         }
-        
+
         static void Speak()
         {
             for (int i = 0; i < 13; i++)
