@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Concurrency.WPF"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:model="clr-namespace:Concurrency.WPF.Model"
     xmlns:vm="clr-namespace:Concurrency.WPF"
     Title="MainWindow"
     Width="800"
@@ -15,18 +16,21 @@
     </Window.DataContext>
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <model:AsyncDataSource
+            x:Key="AsyncDS"
+            FastDP="Fast value"
+            SlowerDP="Sloer value"
+            SlowestDP="Slowest Value" />
     </Window.Resources>
-    <Grid>
-        <StackPanel HorizontalAlignment="Left">
+    <DockPanel>
+        <StackPanel HorizontalAlignment="Left" DockPanel.Dock="Left">
 
             <Button Click="ObserveOn_Click" Content="ObserveOn UI" />
             <Button Click="BufferWithCount_Click" Content="Buffer with Count" />
             <Button Click="WindowWithCount_Click" Content="Buffer with Count" />
             <Button Click="BufferWithTime_Click" Content="Buffer with Time" />
 
-
             <Button Click="Throttle_Click" Content="Throttle" />
-
 
             <Button Click="Throttle_Click" Content="Throttle" />
 
@@ -45,6 +49,43 @@
                     Visibility="{Binding MyValue.IsFaulted, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
             </Grid>
+
+            <StackPanel DataContext="{Binding Source={StaticResource AsyncDS}}">
+                <TextBlock
+                    Margin="10"
+                    HorizontalAlignment="Center"
+                    FontSize="18"
+                    FontWeight="Bold">
+                    Aysnc Binding
+                </TextBlock>
+                <TextBlock
+                    Width="100"
+                    HorizontalAlignment="Center"
+                    Background="Honeydew"
+                    Text="{Binding SlowestDP, IsAsync=True, FallbackValue='Loading...'}" />
+
+                <TextBlock
+                    Margin="10"
+                    HorizontalAlignment="Center"
+                    FontSize="18"
+                    FontWeight="Bold">
+                    Priority Binding
+                </TextBlock>
+                <TextBlock
+                    Width="100"
+                    HorizontalAlignment="Center"
+                    Background="Honeydew">
+                    <TextBlock.Text>
+                        <PriorityBinding FallbackValue="Please wait...">
+                            <Binding IsAsync="True" Path="SlowestDP" />
+                            <Binding IsAsync="True" Path="SlowerDP" />
+                            <Binding Path="FastDP" />
+                        </PriorityBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+            </StackPanel>
         </StackPanel>
-    </Grid>
+        <Grid DockPanel.Dock="Right" />
+
+    </DockPanel>
 </Window>

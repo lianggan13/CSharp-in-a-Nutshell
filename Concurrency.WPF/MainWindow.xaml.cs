@@ -7,6 +7,7 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -254,6 +255,11 @@ namespace Concurrency.WPF
                         x => Trace.WriteLine($"{DateTime.Now.Second}: Saw {x.Length}"),
                         ex => Trace.WriteLine(ex));
             }
+        }
+
+        private async void AsyncContentControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            await Task.Delay(TimeSpan.FromSeconds(3));
         }
     }
 

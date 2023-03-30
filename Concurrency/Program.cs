@@ -4,7 +4,22 @@
 
 //TPL_DataFlow.CreateCustomBlock();
 
-//await Asynchronous.ProcessTasksAsync();
+int x = 6;
+
+int y = x + 5;
+
+
+Task.Run(async () =>
+{
+	while (true)
+	{
+
+		await Task.Delay(4000);
+	}
+
+});
+
+// await Asynchronous.ProcessTasksAsync();
 
 //// ch05
 //{
@@ -14,10 +29,9 @@
 //ch12r02A.Show();
 
 
-using Concurrency;
 
 //TAP.Show().Wait();
-Rx.Show();
+//Rx.Show();
 
 //Scheduler.Show();
 
