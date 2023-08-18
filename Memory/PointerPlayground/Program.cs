@@ -1,11 +1,19 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using System.Runtime.InteropServices;
 
 Show();
 
 Console.ReadKey();
 
 unsafe void Show()
+{
+    Pointer();
+
+    ConvertBytes();
+}
+
+unsafe void Pointer()
 {
     int x = 10;
     short y = -1;
@@ -30,4 +38,23 @@ unsafe void Show()
     Console.WriteLine($"x treated as a double = {*pZ}");
 }
 
+void ConvertBytes()
+{
+    byte[] managedArray = { 1, 2, 3, 4, 5 };
+    GCHandle hObject = GCHandle.Alloc(managedArray, GCHandleType.Pinned);
+    try
+    {
+        // byte[] --> IntPtr 
+        IntPtr pBuffer = hObject.AddrOfPinnedObject();
 
+        // IntPtr --> byte[]
+        int size = managedArray.Length;
+        byte[] managedArray2 = new byte[size];
+        Marshal.Copy(pBuffer, managedArray2, 0, size);
+    }
+    finally
+    {
+        if (hObject.IsAllocated)
+            hObject.Free();
+    }
+}

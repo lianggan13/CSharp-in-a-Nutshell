@@ -1,13 +1,10 @@
-﻿using System;
-using System.Threading;
-
-namespace _10__The_Barrier_Class
+﻿namespace _10__The_Barrier_Class
 {
     /// <summary>
     ///  线程执行屏障，
     ///  控制多个线程在同一时刻汇合，让线程步调一致地执行
     /// </summary>
-    public class _01__Barrier
+    public class Barriers
     {
         static Barrier _barrier = new Barrier(3, b => { Console.WriteLine(b.ParticipantsRemaining)});
 

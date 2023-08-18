@@ -14,6 +14,7 @@ public class HttpClientSamples : IDisposable
 
     public async Task GetDataSimpleAsync()
     {
+
         HttpResponseMessage response = await HttpClient.GetAsync(NorthwindUrl);
         if (response.IsSuccessStatusCode)
         {

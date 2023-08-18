@@ -1,7 +1,5 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
+﻿using System.Threading.Tasks.Dataflow;
+using Utilities;
 
 namespace Concurrency
 {
@@ -84,6 +82,7 @@ namespace Concurrency
 
         public static void LimitCapacity()
         {
+
             var sourceBlock = new BufferBlock<int>();
             var options = new DataflowBlockOptions { BoundedCapacity = 1 };
             var targetBlockA = new BufferBlock<int>(options);
@@ -102,10 +101,9 @@ namespace Concurrency
                     //sourceBlock.Post(n);
                     await sourceBlock.SendAsync(n);
                     Console.WriteLine($"<< {nameof(sourceBlock)}:{n}");
-                    await Task.Delay(300);
+                    await Task.Delay(2000);
                 }
             });
-
             Task.Run(async () =>
             {
                 Random rand = new Random();
@@ -113,33 +111,31 @@ namespace Concurrency
                 {
                     //int n = sourceBlock.Receive();
                     int n = await sourceBlock.ReceiveAsync();
-                    Console.WriteLine($">> {nameof(sourceBlock)}:{n}");
+                    LogHelper.Info($">> Local:{n}");
                 }
             });
 
-            Task.Run(() =>
-            {
-                Random rand = new Random();
-                while (true)
-                {
-                    int n = targetBlockA.Receive();
-                    Console.WriteLine($">> {nameof(targetBlockA)}:{n}");
+            //Task.Run(async () =>
+            //{
+            //    Random rand = new Random();
+            //    while (await targetBlockA.OutputAvailableAsync())
+            //    {
+            //        int n = await targetBlockA.ReceiveAsync();
+            //        LogHelper.Warn($">> A:{n}");
+            //        Thread.Sleep(rand.Next(5000));
+            //    }
+            //});
 
-                    Thread.Sleep(rand.Next(5000));
-                }
-            });
-
-            Task.Run(() =>
-            {
-                Random rand = new Random();
-                while (true)
-                {
-                    int n = targetBlockB.Receive();
-                    Console.WriteLine($">> {nameof(targetBlockB)}:{n}");
-
-                    Thread.Sleep(rand.Next(5000));
-                }
-            });
+            //Task.Run(async () =>
+            //{
+            //    Random rand = new Random();
+            //    while (await targetBlockB.OutputAvailableAsync())
+            //    {
+            //        int n = await targetBlockB.ReceiveAsync();
+            //        LogHelper.Warn($">> B:{n}");
+            //        Thread.Sleep(rand.Next(5000));
+            //    }
+            //});
 
         }
 
@@ -202,5 +198,69 @@ namespace Concurrency
 
         }
 
+        public static void ReadCSFiles()
+        {
+            var fileNamesForPath = new TransformBlock<string, IEnumerable<string>>(
+              path => GetFileNames(path));
+
+            var lines = new TransformBlock<IEnumerable<string>, IEnumerable<string>>(
+              fileNames => LoadLines(fileNames));
+
+            var words = new TransformBlock<IEnumerable<string>, IEnumerable<string>>(
+              lines2 => GetWords(lines2));
+
+            var display = new ActionBlock<IEnumerable<string>>(
+              coll =>
+              {
+                  foreach (var s in coll)
+                  {
+                      Console.WriteLine(s);
+                  }
+              });
+
+
+            fileNamesForPath.LinkTo(lines);
+            lines.LinkTo(words);
+            words.LinkTo(display);
+        }
+
+
+        public static IEnumerable<string> GetFileNames(string path)
+        {
+            foreach (var fileName in Directory.EnumerateFiles(path, "*.cs"))
+            {
+                yield return fileName;
+            }
+        }
+
+        public static IEnumerable<string> LoadLines(IEnumerable<string> fileNames)
+        {
+            foreach (var fileName in fileNames)
+            {
+                using (FileStream stream = File.OpenRead(fileName))
+                {
+                    var reader = new StreamReader(stream);
+                    string line = null;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        //WriteLine($"LoadLines {line}");
+                        yield return line;
+                    }
+                }
+            }
+        }
+
+        public static IEnumerable<string> GetWords(IEnumerable<string> lines)
+        {
+            foreach (var line in lines)
+            {
+                string[] words = line.Split(' ', ';', '(', ')', '{', '}', '.', ',');
+                foreach (var word in words)
+                {
+                    if (!string.IsNullOrEmpty(word))
+                        yield return word;
+                }
+            }
+        }
     }
 }

@@ -3,6 +3,24 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
+
+var domainEntry = Dns.GetHostEntry("www.baidu.com");
+Console.WriteLine(domainEntry.HostName);
+foreach (var ip in domainEntry.AddressList)
+{
+    Console.WriteLine(ip);
+}
+
+var domainEntryByAddress = Dns.GetHostEntry("127.0.0.1");
+Console.WriteLine(domainEntryByAddress.HostName);
+foreach (var ip in domainEntryByAddress.AddressList)
+{
+    Console.WriteLine(ip);
+}
+Thread.Sleep(10000);
+Console.ReadKey();
+
+
 if (args.Length == 0)
     //args = new string[] { "-p", "9400" };
     args = new string[] { "-p", "9400", "-g", "230.0.0.1" };

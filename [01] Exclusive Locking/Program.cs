@@ -28,14 +28,13 @@ namespace _01__Exclusive_Locking
               */
 
 
-            //_01__Simple_use_of_lock simlock = new _01__Simple_use_of_lock();
-            // _01__Simple_use_of_lock.Show();
+            _05__Nested_locking.Show();
 
 
-            _07__Deadlocks deadlock = new _07__Deadlocks();
-            deadlock.Show();
+            //_07__Deadlocks deadlock = new _07__Deadlocks();
+            //deadlock.Show();
 
-            _10__Mutex.Show();
+            //_10__Mutex.Show();
 
             Console.WriteLine("Press any key to quit...");
             Console.ReadKey();
