@@ -9,7 +9,7 @@ namespace _10__The_Barrier_Class
     /// </summary>
     public class _01__Barrier
     {
-        static Barrier _barrier = new Barrier(3, b => { Console.WriteLine(b.ParticipantsRemaining)});
+        static Barrier _barrier = new Barrier(3, b => { Console.WriteLine(b.ParticipantsRemaining); });
 
         public static void Show()
         {

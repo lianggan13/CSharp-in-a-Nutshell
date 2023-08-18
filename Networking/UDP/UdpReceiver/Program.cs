@@ -22,8 +22,8 @@ Console.ReadKey();
 
 
 if (args.Length == 0)
-    //args = new string[] { "-p", "9400" };
-    args = new string[] { "-p", "9400", "-g", "230.0.0.1" };
+    args = new string[] { "-p", "9400" };
+//args = new string[] { "-p", "9400", "-g", "230.0.0.1" };
 
 if (!ParseCommandLine(args, out int port, out string groupAddress))
 {
